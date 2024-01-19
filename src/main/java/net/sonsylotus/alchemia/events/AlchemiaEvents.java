@@ -9,29 +9,72 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.sonsylotus.alchemia.AlchemiaMod;
+import net.sonsylotus.alchemia.effect.AlchemiaEffects;
 import net.sonsylotus.alchemia.events.potions.BrewingRecipeHelper;
 import net.sonsylotus.alchemia.potion.custom.AlchemiaPotionsCustom;
 import net.sonsylotus.alchemia.potion.vanilla.AlchemiaPotionsVanilla;
+@Mod.EventBusSubscriber(modid = AlchemiaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class AlchemiaEvents {
+
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onInputUpdate(MovementInputUpdateEvent event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null)
+    public static void confusionEffectUpdate(MovementInputUpdateEvent event) {
+        assert Minecraft.getInstance().player != null;
+        if (!Minecraft.getInstance().player.hasEffect(AlchemiaEffects.CONFUSION.get())) {
             return;
+        }
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
 
         Input input = event.getInput();
-            input.up = false;
-            input.down = false;
-            input.left = false;
-            input.right = false;
-            input.forwardImpulse = 0;
-            input.leftImpulse = 0;
-            input.jumping = false;
-            input.shiftKeyDown = false;
+        input.up = false;
+        input.down = false;
+        input.left = false;
+        input.right = false;
+        input.forwardImpulse = -1 * input.forwardImpulse;
+        input.leftImpulse = -1 * input.leftImpulse;
 
+        // Switch jumping and shift keys
+        boolean wasJumping = input.jumping;
+        input.jumping = input.shiftKeyDown;
+        input.shiftKeyDown = wasJumping;
     }
+
+//    @SubscribeEvent
+//    @OnlyIn(Dist.CLIENT)
+//    public void inputUpdate(MovementInputUpdateEvent event) {
+//        Input input = event.getInput();
+//
+//        // Inverting the impulse values for forward and backward movement
+//        input.forwardImpulse = -1;
+//
+//        // Inverting the impulse values for left and right movement
+//        input.leftImpulse = -input.leftImpulse;
+//
+//        // Invert the up/down, left/right boolean values
+//        boolean wasMovingUp = input.up;
+//        boolean wasMovingDown = input.down;
+//        boolean wasMovingLeft = input.left;
+//        boolean wasMovingRight = input.right;
+//
+//        input.up = wasMovingDown;
+//        input.down = wasMovingUp;
+//        input.left = wasMovingRight;
+//        input.right = wasMovingLeft;
+//
+//        // Inverting jumping and sneaking states
+//        boolean wasJumping = input.jumping;
+//        boolean wasSneaking = input.shiftKeyDown;
+//
+//        input.jumping = wasSneaking;
+//        input.shiftKeyDown = wasJumping;
+//    }
 
 
 

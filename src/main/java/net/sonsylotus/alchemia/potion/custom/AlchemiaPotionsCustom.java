@@ -24,6 +24,9 @@ public class AlchemiaPotionsCustom {
     public static final RegistryObject<Potion> HARMFUL_AURA_POTION = ALCHEMIA_POTIONS.register("harmful_aura_potion",
             () -> new Potion(new MobEffectInstance(AlchemiaEffects.HARMFUL_AURA.get(), 200, 0)));
 
+    public static final RegistryObject<Potion> CONFUSION_POTION = ALCHEMIA_POTIONS.register("confusion_potion",
+            () -> new Potion(new MobEffectInstance(AlchemiaEffects.CONFUSION.get(), 200, 0)));
+
     public static void register(IEventBus eventBus) {
 
         ALCHEMIA_POTIONS.register(eventBus);
